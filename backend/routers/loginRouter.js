@@ -36,7 +36,7 @@ loginRouter.post("/", async (req, res, next) => {
     .status(200)
     .json({
       message: "Zalogowano pomyślnie",
-      user: { id: user.id, email: user.email, role: user.role, name: user.name, surname: user.surname },
+      user: { id: user.id, email: user.email, role: user.role, name: user.name, surname: user.surname, photo: user.photo },
     });
 });
 
