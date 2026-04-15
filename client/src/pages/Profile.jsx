@@ -61,17 +61,19 @@ const Profile = () => {
     fetchData();
   }, [id]);
 
-  const handleUpdateProfile = async () => {
+const handleUpdateProfile = async () => {
     if (!canSave) return;
     setIsSubmitting(true);
     try {
-      const res = await axios.patch("http://localhost:3000/edit/user", editForm, { withCredentials: true });
+      const res = await axios.patch(`http://localhost:3000/edit/user/${id}`, editForm, { withCredentials: true });
       const updated = { ...profile, ...editForm };
-      setProfile(updated);
-      setUser(updated);
-      localStorage.setItem("user", JSON.stringify(updated));
+      setProfile(updated); 
+      if (isOwner) {
+        setUser(updated);
+        localStorage.setItem("user", JSON.stringify(updated));
+      }
       setIsEditing(false);
-      toast.success(res.data.message);
+      toast.success(res.data.message || "Profil zaktualizowany");
     } catch (e) {
       toast.error(e.response?.data?.message || "Błąd zapisu");
     } finally {
