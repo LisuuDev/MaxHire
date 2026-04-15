@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { User, Briefcase } from "lucide-react"; // <-- Dodano import Briefcase
+import { User, Briefcase } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const AdminPanel = () => {
@@ -97,7 +97,6 @@ const AdminPanel = () => {
                 key={user.id}
                 className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-zinc-900 border border-zinc-800/80 rounded-lg hover:border-zinc-700 transition-colors gap-4"
               >
-                {/* ZDJĘCIE I DANE */}
                 <Link
                   to={`/profile/${user.id}`}
                   className="flex items-center gap-4 mb-2 sm:mb-0 group cursor-pointer"
@@ -126,8 +125,6 @@ const AdminPanel = () => {
                     </span>
                   </div>
                 </Link>
-
-                {/* AKCJE (ROLA, OGŁOSZENIA, USUŃ) */}
                 <div className="flex items-center space-x-3 sm:space-x-4">
                   <span
                     className={`hidden sm:inline-block text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-md ${
@@ -138,8 +135,6 @@ const AdminPanel = () => {
                   >
                     {user.role}
                   </span>
-
-                  {/* PRZYCISK DO OGŁOSZEŃ */}
                   <Link
                     to={`/profile/${user.id}`}
                     className="flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-semibold text-zinc-300 bg-zinc-800 border border-zinc-700 rounded-md hover:bg-zinc-700 hover:text-white transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:ring-offset-2 focus:ring-offset-zinc-900"
@@ -149,7 +144,6 @@ const AdminPanel = () => {
                     <span className="hidden sm:inline">Ogłoszenia</span>
                   </Link>
 
-                  {/* PRZYCISK USUŃ */}
                   <button
                     onClick={() => handleDelete(user.id)}
                     className="px-3 sm:px-4 py-2 text-sm font-semibold text-red-400 bg-red-400/10 border border-red-400/20 rounded-md hover:bg-red-500 hover:text-white hover:border-red-500 transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-zinc-900"
