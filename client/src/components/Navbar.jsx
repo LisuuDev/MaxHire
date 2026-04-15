@@ -22,10 +22,7 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropdownOpen(false);
       }
     };
@@ -38,17 +35,20 @@ const Navbar = () => {
       await axios.post(
         "http://localhost:3000/logout",
         {},
-        { withCredentials: true }
+        { withCredentials: true },
       );
       setUser(null);
       localStorage.removeItem("user");
       toast.success("Wylogowano");
       navigate("/login");
     } catch (error) {
+      console.error("Logout error:", error);
       setUser(null);
       localStorage.removeItem("user");
     }
   };
+
+  const isAdmin = user?.role === "admin" || user?.role === "Admin";
 
   return (
     <nav className="grid grid-cols-3 items-center px-6 md:px-16 lg:px-24 xl:px-32 py-4 border-b border-zinc-800 bg-zinc-950 relative text-zinc-100 z-50">
@@ -58,7 +58,7 @@ const Navbar = () => {
         </Link>
       </div>
 
-      <div className="hidden sm:flex items-center justify-center gap-8 text-zinc-400">
+      <div className="hidden sm:flex items-center justify-center flex-1 gap-4 md:gap-8 text-zinc-400 px-4">
         <Link to="/" className="hover:text-white transition-colors">
           Strona główna
         </Link>
@@ -68,6 +68,14 @@ const Navbar = () => {
         <Link to="/contact" className="hover:text-white transition-colors">
           Kontakt
         </Link>
+        {isAdmin && (
+          <Link
+            to="/admin"
+            className="hover:text-white transition-colors text-red-400 font-bold"
+          >
+            Panel Admina
+          </Link>
+        )}
       </div>
 
       <div className="flex items-center justify-end">
@@ -163,6 +171,16 @@ const Navbar = () => {
         >
           Kontakt
         </Link>
+
+        {isAdmin && (
+          <Link
+            to="/admin"
+            onClick={() => setOpen(false)}
+            className="text-red-400 hover:text-red-300 py-2 font-medium"
+          >
+            Panel admina
+          </Link>
+        )}
 
         <div className="w-full h-px bg-zinc-800 my-2"></div>
 

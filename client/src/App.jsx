@@ -13,6 +13,7 @@ import CreateOffer from "./pages/CreateOffer";
 import { useAuth } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ScrollToTop from "./components/ScrollToTop";
+import AdminPanel from "./pages/AdminPanel";
 
 const App = () => {
   const { user } = useAuth();
@@ -44,6 +45,10 @@ const App = () => {
           <Route 
             path="/contact" 
             element={<Contact />} 
+          />
+          <Route 
+            path="/admin" 
+            element={<AdminPanel />} 
           />
           <Route
             path="/offer/:id"
