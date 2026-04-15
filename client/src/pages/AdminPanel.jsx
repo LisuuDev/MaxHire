@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { User, Briefcase } from "lucide-react";
+import { User, Briefcase, Search } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const AdminPanel = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
   const usersPerPage = 5;
 
   useEffect(() => {
@@ -31,10 +32,22 @@ const AdminPanel = () => {
     fetchUsers();
   }, []);
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
+
+  const filteredUsers = users.filter((user) => {
+    const fullName = `${user.name} ${user.surname}`.toLowerCase();
+    const email = user.email.toLowerCase();
+    const query = searchQuery.toLowerCase();
+
+    return fullName.includes(query) || email.includes(query);
+  });
+
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
-  const totalPages = Math.ceil(users.length / usersPerPage);
+  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
+  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
 
   const handleDelete = async (id) => {
     if (!window.confirm("Czy na pewno chcesz usunąć tego użytkownika?")) return;
@@ -72,7 +85,7 @@ const AdminPanel = () => {
   return (
     <div className="flex flex-col items-center min-h-screen w-full px-6 py-12">
       <div className="flex flex-col w-full max-w-4xl p-6 sm:p-8 rounded-2xl bg-zinc-950 border border-zinc-800 shadow-xl text-zinc-100">
-        <div className="mb-8 flex justify-between items-end border-b border-zinc-800/50 pb-4">
+        <div className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 border-b border-zinc-800/50 pb-4">
           <div>
             <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
               Panel Administratora
@@ -82,8 +95,21 @@ const AdminPanel = () => {
             </p>
           </div>
           <div className="text-sm text-zinc-500 font-medium">
-            Łącznie: {users.length}
+            Łącznie: {filteredUsers.length} z {users.length}
           </div>
+        </div>
+
+        <div className="relative mb-6">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <Search className="h-5 w-5 text-zinc-500" />
+          </div>
+          <input
+            type="text"
+            placeholder="Szukaj po imieniu, nazwisku lub adresie email..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-4 py-3 bg-zinc-900 border border-zinc-800 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-600 focus:border-transparent transition-all shadow-sm"
+          />
         </div>
 
         <div className="space-y-3">
@@ -116,7 +142,7 @@ const AdminPanel = () => {
                     </div>
                   )}
 
-                  <div className="flex flex-col truncate">
+                  <div className="flex flex-col truncate max-w-[200px] sm:max-w-[300px]">
                     <span className="font-semibold text-zinc-200 truncate group-hover:text-white group-hover:underline transition-all">
                       {user.name} {user.surname}
                     </span>
@@ -125,7 +151,8 @@ const AdminPanel = () => {
                     </span>
                   </div>
                 </Link>
-                <div className="flex items-center space-x-3 sm:space-x-4">
+
+                <div className="flex items-center justify-end space-x-3 sm:space-x-4">
                   <span
                     className={`hidden sm:inline-block text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-md ${
                       user.role === "admin"
@@ -135,6 +162,7 @@ const AdminPanel = () => {
                   >
                     {user.role}
                   </span>
+
                   <Link
                     to={`/profile/${user.id}`}
                     className="flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-semibold text-zinc-300 bg-zinc-800 border border-zinc-700 rounded-md hover:bg-zinc-700 hover:text-white transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:ring-offset-2 focus:ring-offset-zinc-900"
@@ -155,7 +183,7 @@ const AdminPanel = () => {
             ))
           ) : (
             <div className="text-center py-8 text-zinc-500">
-              Brak użytkowników do wyświetlenia.
+              {searchQuery ? "Nie znaleziono użytkowników spełniających kryteria." : "Brak użytkowników do wyświetlenia."}
             </div>
           )}
         </div>
