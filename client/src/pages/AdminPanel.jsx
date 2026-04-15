@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { User } from "lucide-react";
-import { Link } from "react-router-dom"; // <-- Dodany import Link
+import { Link } from "react-router-dom";
 
 const AdminPanel = () => {
   const [users, setUsers] = useState([]);
@@ -72,7 +72,6 @@ const AdminPanel = () => {
   return (
     <div className="flex flex-col items-center min-h-screen w-full px-6 py-12">
       <div className="flex flex-col w-full max-w-4xl p-6 sm:p-8 rounded-2xl bg-zinc-950 border border-zinc-800 shadow-xl text-zinc-100">
-        {/* Nagłówek */}
         <div className="mb-8 flex justify-between items-end border-b border-zinc-800/50 pb-4">
           <div>
             <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
@@ -87,7 +86,6 @@ const AdminPanel = () => {
           </div>
         </div>
 
-        {/* Lista użytkowników */}
         <div className="space-y-3">
           {loading ? (
             <div className="text-center py-8 text-zinc-500">
@@ -99,21 +97,17 @@ const AdminPanel = () => {
                 key={user.id}
                 className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-zinc-900 border border-zinc-800/80 rounded-lg hover:border-zinc-700 transition-colors gap-4"
               >
-                {/* ZDJĘCIE I DANE UŻYTKOWNIKA (TERAZ KLIKALNE) */}
                 <Link
                   to={`/profile/${user.id}`}
                   className="flex items-center gap-4 mb-2 sm:mb-0 group cursor-pointer"
                 >
-                  {/* Awatar */}
+
                   {user.photo ? (
                     <img
                       src={user.photo}
                       className="h-9 w-9 shrink-0 rounded-full border border-zinc-700 object-cover group-hover:border-zinc-500 transition-colors"
                       alt=""
                       onError={(e) => {
-                        // Jeśli link jest zepsuty, awaryjnie ładujemy coś innego
-                        // W tym wypadku darmowe API wygeneruje inicjały na podstawie imienia i nazwiska
-                        e.target.onerror = null; // Zabezpieczenie przed nieskończoną pętlą
                         e.target.src = `https://ui-avatars.com/api/?name=${user.name}+${user.surname}&background=27272a&color=fff`;
                       }}
                     />
@@ -123,7 +117,6 @@ const AdminPanel = () => {
                     </div>
                   )}
 
-                  {/* Tekst (Imię i email) */}
                   <div className="flex flex-col truncate">
                     <span className="font-semibold text-zinc-200 truncate group-hover:text-white group-hover:underline transition-all">
                       {user.name} {user.surname}
@@ -134,7 +127,6 @@ const AdminPanel = () => {
                   </div>
                 </Link>
 
-                {/* ROLA I PRZYCISK USUŃ */}
                 <div className="flex items-center space-x-4">
                   <span
                     className={`text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-md ${
@@ -162,7 +154,6 @@ const AdminPanel = () => {
           )}
         </div>
 
-        {/* Paginacja */}
         {totalPages > 1 && (
           <div className="mt-8 pt-4 border-t border-zinc-800/50 flex items-center justify-between">
             <button
