@@ -68,6 +68,33 @@ adminCenterRouter.get(
   },
 );
 
+// Edycja ofert danego użytkownika
+
+// Edycja danych użytkownika - na chwile obecna bez mozliwoscia zmiany zdjęcia.
+adminCenterRouter.patch(
+  "/update/user/:userId",
+  tokenAuth,
+  authorizeRoles(["admin"]),
+  async (req, res) => {
+    const findUser = await UserRecord.findById(req.params.userId);
+    if (!findUser) res.status(404).json({ message: "uzytkownik nie istnieje" });
+    const changeUser = new UserRecord({
+      ...findUser,
+      ...req.body,
+      id: findUser.id,
+      photo: findUser.photo,
+    });
+    try {
+      await changeUser.update();
+      res.status(200).json({
+        message: `Dane uzytkownika ${findUser.email} zostały zaaktualizowane`,
+      });
+    } catch (error) {
+      res.status(400).json({ message: "Błąd zmiany danych" });
+    }
+  },
+);
+
 module.exports = {
   adminCenterRouter,
 };
