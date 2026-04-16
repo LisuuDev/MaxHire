@@ -17,7 +17,10 @@ adminCenterRouter.get(
   authorizeRoles(["admin"]),
   async (req, res) => {
     const data = await UserRecord.findAll();
-    res.status(200).json(data);
+    const filterData = data
+      .map((elem) => new UserRecord(elem))
+      .filter((el) => el.id !== req.user.id);
+    res.status(200).json(filterData);
   },
 );
 
