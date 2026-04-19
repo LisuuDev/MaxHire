@@ -124,6 +124,40 @@ adminCenterRouter.patch(
   },
 );
 
+//edycja zgłoszeń uzytkownika:
+
+adminCenterRouter.patch(
+  "/update/offer/:offerId",
+  tokenAuth,
+  authorizeRoles(["admin"]),
+  async (req, res) => {
+    const findOffer = await OfferRecord.findOneByIdOffer(req.params.offerId);
+    if (!findOffer) {
+      res
+        .status(404)
+        .json({ message: "oferta nie istnieje lub zostala usunienta" });
+    }
+    const changeOffer = {
+      ...findOffer,
+      ...req.body,
+    };
+    const ownerOffer = await UserRecord.findById(findOffer.user_id);
+    const data = await new OfferRecord(changeOffer);
+
+    try {
+      await data.update();
+      return res.status(200).json({
+        message: `Dane ogłoszenia  ${findOffer.title} , uzytkownika  ${ownerOffer.email} zostały zaaktualizowane`,
+      });
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(400)
+        .json({ message: "Wystąpił błąd podczas aktualizacji" });
+    }
+  },
+);
+
 module.exports = {
   adminCenterRouter,
 };
