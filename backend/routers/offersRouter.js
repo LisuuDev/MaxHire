@@ -18,7 +18,7 @@ offersRouter.get("/", tokenAuth, async (req, res) => {
 
 //Edytowanie zgłoszeń zalogowanego usera
 
-offersRouter.post("/editOffer/:id", tokenAuth, async (req, res) => {
+offersRouter.patch("/editOffer/:id", tokenAuth, async (req, res) => {
   const findoffer = await OfferRecord.findOneByIdOffer(req.params.id);
 
   if (!findoffer) {

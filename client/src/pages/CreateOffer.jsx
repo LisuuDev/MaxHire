@@ -91,11 +91,20 @@ const AddOfferForm = () => {
     };
 
     try {
-      const url = isEdit ? `http://localhost:3000/offers/editOffer/${id}` : 'http://localhost:3000/addOffer';
-      await axios.post(url, payload, { withCredentials: true });
-      
-      toast.success(isEdit ? "Ogłoszenie zaktualizowane!" : "Ogłoszenie opublikowane!");
-      navigate(`/profile/${user?.id}`);
+      if (isEdit) {
+        const isAdmin = user && (user.role === "admin");
+        const url = isAdmin ? `${API_URL}/backend/admin/update/offer/${id}` : `${API_URL}/backend/offers/editOffer/${id}`;
+        await axios.patch(url, payload, { withCredentials: true });
+        
+        toast.success("Ogłoszenie zaktualizowane!");
+        navigate(`/offer/${id}`);
+      } else {
+        const url = `${API_URL}/backend/addOffer`;
+        await axios.post(url, payload, { withCredentials: true });
+        
+        toast.success("Ogłoszenie opublikowane!");
+        navigate(`/profile/${user?.id}`);
+      }
     } catch (error) {
       toast.error(error.response?.data?.message || "Wystąpił błąd podczas zapisu");
     } finally {
