@@ -67,7 +67,7 @@ const Navbar = () => {
   const isAdmin = user?.role === "admin" || user?.role === "Admin";
 
   return (
-    <nav className="grid grid-cols-3 items-center px-6 md:px-16 lg:px-24 xl:px-32 py-4 border-b border-zinc-800 bg-zinc-950 relative text-zinc-100 z-50">
+    <nav className="grid grid-cols-[auto_1fr_auto] items-center px-6 md:px-16 lg:px-24 xl:px-32 py-4 border-b border-zinc-800 bg-zinc-950 relative text-zinc-100 z-50">
       <div className="flex justify-start">
         <Link to="/">
           <img src={logo} alt="logo" className="h-8 w-auto" />

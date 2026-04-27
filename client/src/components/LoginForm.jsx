@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import axios from "axios";
+import { FileText } from "lucide-react";
 
 const API_URL = import.meta.env.VITE_BACKEND_API_URL || "";
 
@@ -19,11 +20,35 @@ const LoginForm = () => {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
+  const pdfInputRef = useRef(null);
   const navigate = useNavigate();
   const { setUser } = useAuth();
 
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
+  const handlePdfUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const data = new FormData();
+    data.append("cvFile", file);
+    try {
+      const response = await axios.post(
+        `${API_URL}/backend/register/registerAi/cv`,
+        data,
+        {
+          withCredentials: true,
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+      if (response.data.data) {
+        setName(response.data.data.name || name);
+        setSurname(response.data.data.surname || surname);
+        setEmail(response.data.data.email || email);
+        toast.success("Dane z CV zostały wczytane");
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Błąd przetwarzania CV");
+    }
+  };
   const handleRegister = async (e) => {
     e.preventDefault();
 
@@ -98,6 +123,7 @@ const LoginForm = () => {
 
   return (
     <div className="flex flex-col justify-center w-full max-w-md p-6 sm:p-8 rounded-2xl bg-zinc-950 border border-zinc-800 shadow-xl text-zinc-100">
+      <input type="file" ref={pdfInputRef} className="hidden" accept=".pdf" onChange={handlePdfUpload} />
       <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
         {isRegistering ? "Zarejestruj się" : "Witaj ponownie"}
       </h2>
@@ -258,6 +284,15 @@ const LoginForm = () => {
             className="w-full py-3.5 font-bold text-zinc-950 bg-zinc-100 rounded-lg hover:bg-white hover:scale-[1.01] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-100 focus:ring-offset-zinc-900 transition-all shadow-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
           >
             {isLoading ? "Tworzenie konta..." : "Utworz konto"}
+          </button>
+
+          <button
+            disabled={isLoading}
+            type="button"
+            onClick={() => pdfInputRef.current.click()}
+            className="w-full mt-3 flex items-center justify-center gap-2 py-3 font-bold text-white bg-red-600 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 focus:ring-offset-zinc-900 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <FileText className="w-5 h-5" /> Użyj CV
           </button>
 
           <p className="text-center text-zinc-500 mt-8 text-sm">
