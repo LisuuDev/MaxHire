@@ -18,7 +18,7 @@ const { profileRouter } = require("./routers/profileRouter");
 const app = express();
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: true,
     credentials: true,
   }),
 );
@@ -42,6 +42,6 @@ app.use("/profile", profileRouter);
 app.use("/upload", photoUploadRouter);
 app.use(handleError);
 
-app.listen(3000, "localhost", () => {
+app.listen(3000, "0.0.0.0", () => {
   console.log("Server is running on localhost");
 });

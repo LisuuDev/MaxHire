@@ -3,6 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import axios from "axios";
 
+const API_URL = import.meta.env.VITE_BACKEND_API_URL || "";
+
 const Recover = () => {
   const { token } = useParams();
   const navigate = useNavigate();
@@ -12,13 +14,11 @@ const Recover = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const API_URL = "http://localhost:3000";
-
   const handleRequestReset = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      await axios.post(`${API_URL}/edit/user/forgetPassword`, { email });
+      await axios.post(`${API_URL}/backend/edit/user/forgetPassword`, { email });
       toast.success("Link do resetowania wysłany na email!");
     } catch (error) {
       toast.error(error.response?.data?.message || "Błąd wysyłania");
@@ -34,7 +34,7 @@ const Recover = () => {
     }
     setIsLoading(true);
     try {
-      await axios.patch(`${API_URL}/edit/user/changePassword`, { token, password });
+      await axios.patch(`${API_URL}/backend/edit/user/changePassword`, { token, password });
       toast.success("Hasło zostało zmienione!");
       navigate("/login");
     } catch (error) {

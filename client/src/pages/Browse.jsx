@@ -4,6 +4,8 @@ import { useSearchParams } from 'react-router-dom';
 import { SlidersHorizontal, DollarSign, Search } from 'lucide-react';
 import Listings from "../components/Listings";
 
+const API_URL = import.meta.env.VITE_BACKEND_API_URL || "";
+
 const Browse = () => {
   const [offers, setOffers] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -29,7 +31,7 @@ const Browse = () => {
   useEffect(() => {
     setLoading(true);
     setError(null);
-    axios.get(`http://localhost:3000/offers?page=${page}&search=${searchTerm}`, { withCredentials: true })
+    axios.get(`${API_URL}/backend/offers?page=${page}&search=${searchTerm}`, { withCredentials: true })
       .then(res => {
         if (res.data && Array.isArray(res.data.offers)) {
           setOffers(res.data.offers);

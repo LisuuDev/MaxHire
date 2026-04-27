@@ -17,6 +17,8 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 
+const API_URL = import.meta.env.VITE_BACKEND_API_URL || "";
+
 const Profile = () => {
   const { id } = useParams();
   const { user: loggedInUser, setUser } = useAuth();
@@ -40,8 +42,8 @@ const Profile = () => {
     try {
       setLoading(true);
       const [profileRes, offersRes] = await Promise.all([
-        axios.get(`http://localhost:3000/profile/getProfile/${id}`, { withCredentials: true }),
-        axios.get(`http://localhost:3000/offer/user/${id}`, { withCredentials: true })
+        axios.get(`${API_URL}/backend/profile/getProfile/${id}`, { withCredentials: true }),
+        axios.get(`${API_URL}/backend/offer/user/${id}`, { withCredentials: true })
       ]);
 
       if (profileRes.data.message && profileRes.data.message.length > 0) {
@@ -68,8 +70,8 @@ const handleUpdateProfile = async () => {
     setIsSubmitting(true);
     try {
       const res = isAdmin && !isOwner ? 
-        await axios.patch(`http://localhost:3000/admin/update/user/${id}`, editForm, { withCredentials: true })
-        : await axios.patch(`http://localhost:3000/edit/user/${id}`, editForm, { withCredentials: true })
+        await axios.patch(`${API_URL}/backend/admin/update/user/${id}`, editForm, { withCredentials: true })
+        : await axios.patch(`${API_URL}/backend/edit/user/${id}`, editForm, { withCredentials: true })
       
       const updated = { ...profile, email: editForm.email, phone: editForm.phone };
       setProfile(updated); 
@@ -95,14 +97,14 @@ const handleUpdateProfile = async () => {
     const uploadToast = toast.loading("Wgrywanie...");
     try {
       await axios.post(
-        "http://localhost:3000/upload/profilePhoto",
+        `${API_URL}/backend/upload/profilePhoto`,
         data,
         {
           withCredentials: true,
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
-      const usersRes = await axios.get(`http://localhost:3000/profile/getProfile/${id}`, { withCredentials: true });
+      const usersRes = await axios.get(`${API_URL}/backend/profile/getProfile/${id}`, { withCredentials: true });
       const updatedMe = usersRes.data.message && usersRes.data.message[0];
       if (updatedMe) {
         setUser(updatedMe);
@@ -122,7 +124,7 @@ const handleUpdateProfile = async () => {
     data.append("cvFile", file);
     try {
       const response = await axios.post(
-        "http://localhost:3000/register/registerAi/cv",
+        `${API_URL}/backend/register/registerAi/cv`,
         data,
         {
           withCredentials: true,

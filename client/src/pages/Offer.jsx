@@ -4,6 +4,8 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, ExternalLink, Globe, Mail, User, Phone } from 'lucide-react';
 import { useAuth } from "../context/AuthContext";
 
+const API_URL = import.meta.env.VITE_BACKEND_API_URL || "";
+
 const Offer = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -18,7 +20,7 @@ const Offer = () => {
 
   useEffect(() => {
     setLoading(true);
-    axios.get(`http://localhost:3000/offer/getOffer/${id}`, { withCredentials: true })
+    axios.get(`${API_URL}/backend/offer/getOffer/${id}`, { withCredentials: true })
       .then(res => {
         const data = res.data.message;
         if (Array.isArray(data) && data.length > 0) {

@@ -4,6 +4,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from "../context/AuthContext";
 import toast from 'react-hot-toast';
 
+const API_URL = import.meta.env.VITE_BACKEND_API_URL || "";
+
 const AddOfferForm = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -23,7 +25,7 @@ const AddOfferForm = () => {
 
   useEffect(() => {
     if (isEdit) {
-      axios.get(`http://localhost:3000/offer/getOffer/${id}`, { withCredentials: true })
+      axios.get(`${API_URL}/backend/offer/getOffer/${id}`, { withCredentials: true })
         .then(res => {
           const data = res.data.message[0];
           if (data) {
@@ -61,7 +63,7 @@ const AddOfferForm = () => {
 
     setIsDeleting(true);
     try {
-      await axios.delete(`http://localhost:3000/offers/deleteOffer/${id}`, { withCredentials: true });
+      await axios.delete(`${API_URL}/backend/offers/deleteOffer/${id}`, { withCredentials: true });
       toast.success("Ogłoszenie zostało usunięte");
       navigate(`/profile/${user?.id}`);
     } catch (error) {

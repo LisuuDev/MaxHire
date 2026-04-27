@@ -4,6 +4,8 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import axios from "axios";
 
+const API_URL = import.meta.env.VITE_BACKEND_API_URL || "";
+
 const LoginForm = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const isRegistering = searchParams.get("mode") === "register";
@@ -20,8 +22,6 @@ const LoginForm = () => {
   const navigate = useNavigate();
   const { setUser } = useAuth();
 
-  const API_URL = "http://localhost:3000";
-
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const handleRegister = async (e) => {
@@ -35,7 +35,7 @@ const LoginForm = () => {
     setIsLoading(true);
     try {
       await axios.post(
-        `${API_URL}/register`,
+        `${API_URL}/backend/register`,
         {
           name,
           surname,
@@ -70,7 +70,7 @@ const LoginForm = () => {
     setIsLoading(true);
     try {
       const response = await axios.post(
-        `${API_URL}/login`,
+        `${API_URL}/backend/login`,
         {
           email,
           password,

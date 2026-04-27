@@ -4,6 +4,8 @@ import toast from "react-hot-toast";
 import { User, Briefcase, Search } from "lucide-react";
 import { Link } from "react-router-dom";
 
+const API_URL = import.meta.env.VITE_BACKEND_API_URL || "";
+
 const AdminPanel = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -15,7 +17,7 @@ const AdminPanel = () => {
     const fetchUsers = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/admin/userList",
+          `${API_URL}/backend/admin/userList`,
           {
             withCredentials: true,
           },
@@ -54,7 +56,7 @@ const AdminPanel = () => {
 
     try {
       const response = await axios.delete(
-        `http://localhost:3000/admin/remove/${id}`,
+        `${API_URL}/backend/admin/remove/${id}`,
         {
           withCredentials: true,
         },

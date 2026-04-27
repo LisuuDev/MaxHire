@@ -15,6 +15,8 @@ import { useAuth } from "../context/AuthContext";
 import axios from "axios";
 import toast from "react-hot-toast";
 
+const API_URL = import.meta.env.VITE_BACKEND_API_URL || "";
+
 const Navbar = () => {
   const [mobileNavbarOpen, setMobileNavbarOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -47,7 +49,7 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       await axios.post(
-        "http://localhost:3000/logout",
+        `${API_URL}/backend/logout`,
         {},
         { withCredentials: true },
       );
