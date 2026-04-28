@@ -3,7 +3,7 @@
 
 
 const pool = createPool({
-    host: "127.0.0.1",
+    host: process.env.DB_HOST || "127.0.0.1",
     user: "root",
     database: "storemax",
     namedPlaceholders: true,

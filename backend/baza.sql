@@ -30,7 +30,7 @@ USE `storemax`;
 --
 
 CREATE TABLE `offers` (
-  `id` varchar(36) NOT NULL DEFAULT uuid(),
+  `id` varchar(36) NOT NULL DEFAULT (uuid()),
   `title` varchar(40) NOT NULL,
   `company` varchar(40) NOT NULL,
   `description` text NOT NULL,
@@ -74,7 +74,7 @@ INSERT INTO `offers` (`id`, `title`, `company`, `description`, `tech`, `links`, 
 --
 
 CREATE TABLE `users` (
-  `id` varchar(36) NOT NULL DEFAULT uuid(),
+  `id` varchar(36) NOT NULL DEFAULT (uuid()),
   `email` varchar(50) NOT NULL,
   `password` varchar(100) NOT NULL,
   `role` varchar(7) DEFAULT NULL,
